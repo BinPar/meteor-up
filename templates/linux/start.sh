@@ -16,7 +16,7 @@ docker rm -f $APPNAME-frontend
 
 # We don't need to fail the deployment because of a docker hub downtime
 set +e
-docker pull DOCKERIMAGE
+docker pull $DOCKERIMAGE
 set -e
 
 if [ "$USE_LOCAL_MONGO" == "1" ]; then
@@ -32,7 +32,7 @@ if [ "$USE_LOCAL_MONGO" == "1" ]; then
     --hostname="$HOSTNAME-$APPNAME" \
     --env=MONGO_URL=mongodb://mongodb:27017/$APPNAME \
     --name=$APPNAME \
-    DOCKERIMAGE
+    $DOCKERIMAGE
 else
   docker run \
     -d \
@@ -44,5 +44,5 @@ else
     --env-file=$ENV_FILE \
     --link=mail:mail \
     --name=$APPNAME \
-    DOCKERIMAGE
+    $DOCKERIMAGE
 fi
