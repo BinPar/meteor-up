@@ -15,31 +15,35 @@ docker rm -f $APPNAME-frontend
 
 # We don't need to fail the deployment because of a docker hub downtime
 set +e
-docker pull meteorhacks/meteord:base
+docker pull mgonand/dockerimages:meteor
 set -e
 
 if [ "$USE_LOCAL_MONGO" == "1" ]; then
   docker run \
     -d \
     --restart=always \
-    --publish=$PORT:80 \
+    --publish=127.0.0.1:$PORT:80 \
     --volume=$BUNDLE_PATH:/bundle \
+    --volume=/opt/backups:/backups \
     --env-file=$ENV_FILE \
     --link=mongodb:mongodb \
+    --link=mail:mail \
     --hostname="$HOSTNAME-$APPNAME" \
     --env=MONGO_URL=mongodb://mongodb:27017/$APPNAME \
     --name=$APPNAME \
-    meteorhacks/meteord:base
+    mgonand/dockerimages:meteor
 else
   docker run \
     -d \
     --restart=always \
     --publish=$PORT:80 \
     --volume=$BUNDLE_PATH:/bundle \
+    --volume=/opt/backups:/backups \
     --hostname="$HOSTNAME-$APPNAME" \
     --env-file=$ENV_FILE \
+    --link=mail:mail \
     --name=$APPNAME \
-    meteorhacks/meteord:base
+    mgonand/dockerimages:meteor
 fi
 
 <% if(typeof sslConfig === "object")  { %>
