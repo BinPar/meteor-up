@@ -6,7 +6,6 @@ BUNDLE_PATH=$APP_PATH/current
 ENV_FILE=$APP_PATH/config/env.list
 PORT=<%= port %>
 USE_LOCAL_MONGO=<%= useLocalMongo? "1" : "0" %>
-DOCKERIMAGE=<% useMeteor4 ? "mgonand/dockerimages:meteor4" : "mgonand/dockerimages:meteor" %>
 
 # Remove previous version of the app, if exists
 docker rm -f $APPNAME
@@ -32,7 +31,7 @@ if [ "$USE_LOCAL_MONGO" == "1" ]; then
     --hostname="$HOSTNAME-$APPNAME" \
     --env=MONGO_URL=mongodb://mongodb:27017/$APPNAME \
     --name=$APPNAME \
-    DOCKERIMAGE
+    <% useMeteor4 ? "mgonand/dockerimages:meteor4" : "mgonand/dockerimages:meteor" %>
 else
   docker run \
     -d \
@@ -44,5 +43,5 @@ else
     --env-file=$ENV_FILE \
     --link=mail:mail \
     --name=$APPNAME \
-    DOCKERIMAGE
+    <% useMeteor4 ? "mgonand/dockerimages:meteor4" : "mgonand/dockerimages:meteor" %>
 fi
