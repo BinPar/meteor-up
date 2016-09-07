@@ -94,7 +94,7 @@ fi
 if [ -d node_modules ]; then
   (cd node_modules && gyp_rebuild_inside_node_modules)
 fi
-cd ../..
+cd $APP_DIR/current/bundle/programs/server/
 if [[ -e npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt ]] ; then
   echo "******** bcrypt fix ********"
   rm -rf npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt
