@@ -101,6 +101,12 @@ if [[ -e npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt ]] ; then
   npm install --update-binary -f bcrypt
   cp -r node_modules/bcrypt npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt
 fi
+if [[ -e npm/node_modules/bcrypt ]] ; then
+  echo "******** bcrypt fix ********"
+  rm -rf npm/node_modules/bcrypt
+  npm install --update-binary -f bcrypt
+  cp -r node_modules/bcrypt npm/node_modules/
+fi
 
 cd $APP_DIR
 # start app
