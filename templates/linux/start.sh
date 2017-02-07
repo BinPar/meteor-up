@@ -6,6 +6,7 @@ BUNDLE_PATH=$APP_PATH/current
 ENV_FILE=$APP_PATH/config/env.list
 PORT=<%= port %>
 USE_LOCAL_MONGO=<%= useLocalMongo? "1" : "0" %>
+LINK_MAIL=<%= noMail ? "0" : "1" %>
 DOCKERIMAGE=<%= useMeteor4 ? "mgonand/dockerimages:meteor4" : "mgonand/dockerimages:meteor" %>
 
 # Remove previous version of the app, if exists
@@ -20,30 +21,59 @@ docker pull $DOCKERIMAGE
 set -e
 
 if [ "$USE_LOCAL_MONGO" == "1" ]; then
-  docker run \
-    -d \
-    --restart=always \
-    --publish=127.0.0.1:$PORT:80 \
-    --volume=$BUNDLE_PATH:/bundle \
-    --volume=/opt/backups:/backups \
-    --env-file=$ENV_FILE \
-    --link=mongodb:mongodb \
-    --link=mail:mail \
-    --hostname="$HOSTNAME-$APPNAME" \
-    --env=MONGO_URL=mongodb://mongodb:27017/$APPNAME \
-    --name=$APPNAME \
-    $DOCKERIMAGE
+  if [ "$LINK_MAIL" == "1" ]; then
+    docker run \
+      -d \
+      --restart=always \
+      --publish=127.0.0.1:$PORT:80 \
+      --volume=$BUNDLE_PATH:/bundle \
+      --volume=/opt/backups:/backups \
+      --env-file=$ENV_FILE \
+      --link=mongodb:mongodb \
+      --link=mail:mail \
+      --hostname="$HOSTNAME-$APPNAME" \
+      --env=MONGO_URL=mongodb://mongodb:27017/$APPNAME \
+      --name=$APPNAME \
+      $DOCKERIMAGE
+  else
+    docker run \
+      -d \
+      --restart=always \
+      --publish=127.0.0.1:$PORT:80 \
+      --volume=$BUNDLE_PATH:/bundle \
+      --volume=/opt/backups:/backups \
+      --env-file=$ENV_FILE \
+      --link=mongodb:mongodb \
+      --hostname="$HOSTNAME-$APPNAME" \
+      --env=MONGO_URL=mongodb://mongodb:27017/$APPNAME \
+      --name=$APPNAME \
+      $DOCKERIMAGE
+  fi
 else
-  docker run \
-    -d \
-    --restart=always \
-    --publish=127.0.0.1:$PORT:80 \
-    --volume=$BUNDLE_PATH:/bundle \
-    --volume=/opt/backups:/backups \
-    --env-file=$ENV_FILE \
-    --link=mongodb:mongodb \
-    --link=mail:mail \
-    --hostname="$HOSTNAME-$APPNAME" \
-    --name=$APPNAME \
-    $DOCKERIMAGE
+  if [ "$LINK_MAIL" == "1" ]; then
+    docker run \
+      -d \
+      --restart=always \
+      --publish=127.0.0.1:$PORT:80 \
+      --volume=$BUNDLE_PATH:/bundle \
+      --volume=/opt/backups:/backups \
+      --env-file=$ENV_FILE \
+      --link=mongodb:mongodb \
+      --link=mail:mail \
+      --hostname="$HOSTNAME-$APPNAME" \
+      --name=$APPNAME \
+      $DOCKERIMAGE
+  else
+    docker run \
+      -d \
+      --restart=always \
+      --publish=127.0.0.1:$PORT:80 \
+      --volume=$BUNDLE_PATH:/bundle \
+      --volume=/opt/backups:/backups \
+      --env-file=$ENV_FILE \
+      --link=mongodb:mongodb \
+      --hostname="$HOSTNAME-$APPNAME" \
+      --name=$APPNAME \
+      $DOCKERIMAGE
+  fi
 fi
