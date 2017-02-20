@@ -3,6 +3,8 @@
 sudo mkdir -p /opt/<%= appName %>/
 sudo mkdir -p /opt/<%= appName %>/config
 sudo mkdir -p /opt/<%= appName %>/tmp
+sudo mkdir -p /opt/<%= appName %>/static
+sudo mkdir -p /opt/<%= appName %>/static/.well-known
 sudo mkdir -p /opt/mongodb
 
 sudo chown ${USER} /opt/<%= appName %> -R
