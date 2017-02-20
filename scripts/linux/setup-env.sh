@@ -28,7 +28,7 @@ server {
 
     # redirect non-SSL to SSL
     location / {
-        rewrite     ^ https://'$server_name''$request_uri'? permanent;
+        rewrite     ^ https://\$server_name\$request_uri? permanent;
     }
 }
 
@@ -60,7 +60,7 @@ server {
     # to avoid ssl stripping https://en.wikipedia.org/wiki/SSL_stripping#SSL_stripping
     add_header Strict-Transport-Security "max-age=31536000;";
 
-    set '$cache_key' '$scheme''$host''$uri''$is_args''$args';
+    set \$cache_key \$scheme\$host\$uri\$is_args\$args;
 
     location /.well-known {
         root ${PATH_TO_STATIC};
@@ -70,9 +70,9 @@ server {
     location / {
         proxy_pass http://127.0.0.1:${PORT};
         proxy_http_version 1.1;
-        proxy_set_header Upgrade '$http_upgrade'; # allow websockets
-        proxy_set_header Connection '$connection_upgrade';
-        proxy_set_header X-Forwarded-For '$remote_addr'; # preserve client IP
+        proxy_set_header Upgrade \$http_upgrade; # allow websockets
+        proxy_set_header Connection \$connection_upgrade;
+        proxy_set_header X-Forwarded-For \$remote_addr; # preserve client IP
     }
 }
 EOF
