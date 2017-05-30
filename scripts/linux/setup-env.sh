@@ -3,8 +3,6 @@
 sudo mkdir -p /opt/<%= appName %>/
 sudo mkdir -p /opt/<%= appName %>/config
 sudo mkdir -p /opt/<%= appName %>/tmp
-sudo mkdir -p /opt/<%= appName %>/static
-sudo mkdir -p /opt/<%= appName %>/static/.well-known
 sudo mkdir -p /opt/mongodb
 
 sudo chown ${USER} /opt/<%= appName %> -R
@@ -15,7 +13,12 @@ sudo usermod -a -G docker ${USER}
 PATH_TO_STATIC=/opt/<%= appName %>/static/
 HOST=<%= host %>
 PORT=<%= port %>
+IS_CONTAINER_SERVER=<%= containersConfig ? "1" : "0" %>
 PATH_TO_SITE_CONF=/etc/nginx/sites-available/${HOST}.conf
+
+if [ "$IS_CONTAINER_SERVER" == "0" ]; then
+sudo mkdir -p /opt/<%= appName %>/static
+sudo mkdir -p /opt/<%= appName %>/static/.well-known
 if [ ! -f ${PATH_TO_SITE_CONF} ]; then
 cat << EOF > ${PATH_TO_SITE_CONF}
 #HTTP
@@ -71,7 +74,7 @@ server {
         proxy_pass http://127.0.0.1:${PORT};
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade; # allow websockets
-        proxy_set_header Connection \$connection_upgrade;
+        proxy_set_header Connection "upgrade";
         proxy_set_header X-Forwarded-For \$remote_addr; # preserve client IP
     }
 }
@@ -80,6 +83,7 @@ EOF
 ln -s ${PATH_TO_SITE_CONF} /etc/nginx/sites-enabled/
 nginx -s reload
 ~/certbot/certbot-auto certonly --webroot -w ${PATH_TO_STATIC} -d ${HOST}
+sed -e "s/$PATH_TO_ROOT_APP_REPLACE_STRING/$DOCKER_PATH_TO_APP/g" -e "s/$PATH_TO_LOGS_DIR_REPLACE_STRING/$DOCKER_PATH_TO_LOGS/g" deploy.conf > deploy.json
 cat << EOF > ${PATH_TO_SITE_CONF}
 #HTTP
 server {
@@ -134,10 +138,11 @@ server {
         proxy_pass http://127.0.0.1:${PORT};
         proxy_http_version 1.1;
         proxy_set_header Upgrade \$http_upgrade; # allow websockets
-        proxy_set_header Connection \$connection_upgrade;
+        proxy_set_header Connection "upgrade";
         proxy_set_header X-Forwarded-For \$remote_addr; # preserve client IP
     }
 }
 EOF
 nginx -s reload
+fi
 fi

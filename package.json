@@ -1,6 +1,6 @@
 {
   "name": "mupx",
-  "version": "1.5.2",
+  "version": "2.1.0",
   "description": "Production Quality Meteor Deployments",
   "dependencies": {
     "async": "^0.9.0",
@@ -12,15 +12,16 @@
     "uuid": "1.4.x",
     "archiver": "0.14.x",
     "update-notifier": "0.4.x",
-    "minimist": "1.1.1"
+    "minimist": "1.1.1",
+    "request": "2.81.0"
   },
   "bin": {
     "mupx": "./bin/mup"
   },
-  "author": "Arunoda Susiripala <arunoda.susiripala@gmail.com>",
+  "author": "BinPar Team S.L <soporte@binpar.com>",
   "repository": {
     "type": "git",
-    "url": "git://github.com/arunoda/meteor-up.git"
+    "url": "git://github.com/BinPar/meteor-up.git"
   },
   "license": "MIT"
 }
