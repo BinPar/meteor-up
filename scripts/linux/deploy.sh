@@ -85,7 +85,7 @@ sudo cp tmp/bundle.tar.gz current/
 cd current/
 sudo tar xzf bundle.tar.gz
 cd bundle/programs/server/
-sudo npm install
+sudo npm install --unsafe-perm
 echo "****** Rebuilding npm modules ******"
 if [ -d npm ]; then
   (cd npm && rebuild_binary_npm_modules)
@@ -98,13 +98,13 @@ cd $APP_DIR/current/bundle/programs/server/
 if [[ -e npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt ]] ; then
   echo "******** bcrypt fix ********"
   sudo rm -rf npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt
-  sudo npm install --update-binary -f bcrypt
+  sudo npm install --update-binary --unsafe-perm -f bcrypt
   sudo cp -r node_modules/bcrypt npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt
 fi
 if [[ -e npm/node_modules/bcrypt ]] ; then
   echo "******** bcrypt fix ********"
   sudo rm -rf npm/node_modules/bcrypt
-  sudo npm install --update-binary -f bcrypt
+  sudo npm install --update-binary --unsafe-perm -f bcrypt
   sudo cp -r node_modules/bcrypt npm/node_modules/
 fi
 
