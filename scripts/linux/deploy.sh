@@ -26,12 +26,12 @@ gyp_rebuild_inside_node_modules () {
 
     if [ $isBinaryModule = "yes" ]; then
       echo " > $npmModule: npm install due to binary npm modules"
-      rm -rf node_modules
-      npm install
+      sudo rm -rf node_modules
+      sudo npm install
       # always rebuild because the node version might be different.
-      npm rebuild
+      sudo npm rebuild
       if [ -f binding.gyp ]; then
-        node-gyp rebuild || :
+        sudo node-gyp rebuild || :
       fi
     fi
     cd ..
@@ -70,22 +70,22 @@ set -e
 APP_DIR=/opt/<%=appName %>
 
 # save the last known version
-cd $APP_DIR
+sudo cd $APP_DIR
 
 # setup the new version
 # sudo mkdir current
 if [[ -d current ]]; then
-   cd current
-   rm -rf *.tar.gz
-   cd ..
+   sudo cd current
+   sudo rm -rf *.tar.gz
+   sudo cd ..
 else
-   mkdir current
+   sudo mkdir current
 fi
-cp tmp/bundle.tar.gz current/
-cd current/
-tar xzf bundle.tar.gz
-cd bundle/programs/server/
-npm install
+sudo cp tmp/bundle.tar.gz current/
+sudo cd current/
+sudo tar xzf bundle.tar.gz
+sudo cd bundle/programs/server/
+sudo npm install
 echo "****** Rebuilding npm modules ******"
 if [ -d npm ]; then
   (cd npm && rebuild_binary_npm_modules)
@@ -97,15 +97,15 @@ fi
 cd $APP_DIR/current/bundle/programs/server/
 if [[ -e npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt ]] ; then
   echo "******** bcrypt fix ********"
-  rm -rf npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt
-  npm install --update-binary -f bcrypt
-  cp -r node_modules/bcrypt npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt
+  sudo rm -rf npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt
+  sudo npm install --update-binary -f bcrypt
+  sudo cp -r node_modules/bcrypt npm/node_modules/meteor/npm-bcrypt/node_modules/bcrypt
 fi
 if [[ -e npm/node_modules/bcrypt ]] ; then
   echo "******** bcrypt fix ********"
-  rm -rf npm/node_modules/bcrypt
-  npm install --update-binary -f bcrypt
-  cp -r node_modules/bcrypt npm/node_modules/
+  sudo rm -rf npm/node_modules/bcrypt
+  sudo npm install --update-binary -f bcrypt
+  sudo cp -r node_modules/bcrypt npm/node_modules/
 fi
 
 cd $APP_DIR
