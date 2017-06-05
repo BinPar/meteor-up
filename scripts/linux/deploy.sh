@@ -70,21 +70,21 @@ set -e
 APP_DIR=/opt/<%=appName %>
 
 # save the last known version
-sudo cd $APP_DIR
+cd $APP_DIR
 
 # setup the new version
 # sudo mkdir current
 if [[ -d current ]]; then
-   sudo cd current
+   cd current
    sudo rm -rf *.tar.gz
-   sudo cd ..
+   cd ..
 else
    sudo mkdir current
 fi
 sudo cp tmp/bundle.tar.gz current/
-sudo cd current/
+cd current/
 sudo tar xzf bundle.tar.gz
-sudo cd bundle/programs/server/
+cd bundle/programs/server/
 sudo npm install
 echo "****** Rebuilding npm modules ******"
 if [ -d npm ]; then
