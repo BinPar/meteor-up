@@ -8,7 +8,8 @@ PORT=<%= port %>
 USE_LOCAL_MONGO=<%= useLocalMongo? "1" : "0" %>
 LINK_MAIL=<%= noMail ? "0" : "1" %>
 PUBLISH_NETWORK=<%= publishNetwork ? publishNetwork : "127.0.0.1" %>
-DOCKERIMAGE=<%= useMeteor4 ? "mgonand/dockerimages:meteor4" : "mgonand/dockerimages:meteor" %>
+DOCKERIMAGE=<%= dockerimage %>
+DOCKERIMAGE=<%= dockerimage ? "mgonand/dockerimages:meteor4" : "mgonand/dockerimages:meteor" %>
 
 # Remove previous version of the app, if exists
 docker rm -f $APPNAME
